@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fake Hacker Scanner — Just a Prank</title>
+<style>
+:root{color-scheme:dark;--green:#54ff9f;--dim:#8bbda1;--bg:#050b09}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#10271d 0%,#050b09 60%);color:var(--green);font:16px ui-monospace,SFMono-Regular,Menlo,monospace;display:grid;place-items:center;padding:18px}
+.panel{width:min(720px,100%);border:1px solid #286744;border-radius:18px;background:#07110ddd;box-shadow:0 0 35px #1aff7830;padding:22px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #214b33;padding-bottom:14px}
+h1{font-size:clamp(20px,5vw,30px);margin:0;text-shadow:0 0 15px #54ff9f55}.tag{font-size:11px;border:1px solid #397653;border-radius:999px;padding:6px 9px;white-space:nowrap}
+.notice{color:#c6e7d3;font-size:13px;line-height:1.6;background:#10251a;border-left:3px solid var(--green);padding:10px 12px;margin:16px 0}
+.screen{background:#020604;border:1px solid #214b33;border-radius:12px;padding:15px;min-height:230px;position:relative;overflow:hidden}
+.screen:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 4px,#4cff9f08 5px 6px);pointer-events:none}
+.row{display:flex;justify-content:space-between;gap:10px;color:var(--dim);font-size:12px;margin-bottom:10px}
+.progress{height:9px;background:#13261a;border-radius:99px;overflow:hidden;margin:12px 0 17px}.bar{height:100%;width:0;background:linear-gradient(90deg,#1aa65b,#75ffac);box-shadow:0 0 14px #54ff9f;transition:width .3s}
+#logs{font-size:12px;line-height:1.8;white-space:pre-wrap;color:#a7ffc7;max-height:140px;overflow:hidden}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:13px 0}.stat{border:1px solid #214b33;border-radius:10px;padding:12px 8px;text-align:center}.stat b{display:block;font-size:clamp(18px,5vw,25px);margin-bottom:5px}.stat span{font-size:10px;color:var(--dim)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}button{border:1px solid #5aff9f;background:#123823;color:#d9ffe7;border-radius:10px;padding:12px 16px;font:inherit;cursor:pointer;flex:1;min-width:130px}button.secondary{background:transparent;border-color:#365746;color:#b6d8c2}button:focus-visible{outline:2px solid white;outline-offset:3px}
+#finish{display:none;text-align:center;padding:22px 10px}#finish h2{font-size:clamp(26px,7vw,40px);margin:8px 0;color:#fff;text-shadow:0 0 18px #54ff9f}#finish p{color:#b4e7c6;line-height:1.6}
+footer{color:#6f9b7e;font-size:11px;line-height:1.5;margin-top:14px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="panel">
+<header><h1>▣ FAKE HACKER SCANNER</h1><span class="tag">PRANK MODE</span></header>
+<div class="notice">⚠️ এটি শুধুই একটি মজার সিমুলেশন। কোনো ফাইল, নেটওয়ার্ক, অ্যাকাউন্ট বা ফোন স্ক্যান/লক করা হচ্ছে না।</div>
+<section id="scanner">
+<div class="screen">
+<div class="row"><span>SIMULATION_STATUS</span><span id="status">READY</span></div>
+<div class="row"><span>VIRTUAL_SCAN_PROGRESS</span><span id="percent">0%</span></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div id="logs">> সিমুলেশন প্রস্তুত...\n> কোনো বাস্তব স্ক্যান করা হবে না।\n> START চাপলে ২ মিনিটের অ্যানিমেশন শুরু হবে।</div>
+</div>
+<div class="stats">
+<div class="stat"><b id="timer">02:00</b><span>TIME LEFT</span></div>
+<div class="stat"><b id="items">0000</b><span>FAKE ITEMS</span></div>
+<div class="stat"><b id="threat">0</b><span>FAKE ALERTS</span></div>
+</div>
+<div class="actions"><button id="start">▶ START SCAN</button><button class="secondary" id="reset">↻ RESET</button></div>
+</section>
+<section id="finish"><div style="font-size:44px">😂</div><h2>JUST A PRANK!</h2><p>বন্ধু, ভয় পেয়ো না! 😄<br>এটা শুধু নকল স্ক্যানিং অ্যানিমেশন ছিল। তোমার ফোনে কিছুই করা হয়নি।</p><button id="again">আবার চালাও</button></section>
+<footer>Demo only • এই পেজ ফোনের সেটিংস বদলায় না এবং অন্য অ্যাপ নিয়ন্ত্রণ করে না। চাইলে যেকোনো সময় পেজ বন্ধ করতে পারো।</footer>
+</main>
+<script>
+(() => {
+ const total=120; let left=total, timer=null, running=false, startAt=0, logCount=0;
+ const $=id=>document.getElementById(id);
+ const lines=[
+  "> Virtual memory map তৈরি হচ্ছে...",
+  "> কাল্পনিক প্যাকেট যাচাই হচ্ছে...",
+  "> Secure channel simulation চলছে...",
+  "> Dummy file index তৈরি হচ্ছে...",
+  "> Firewall animation: ACTIVE",
+  "> Encryption pattern পরীক্ষা হচ্ছে...",
+  "> Virtual scan checkpoint সম্পন্ন...",
+  "> কোনো বাস্তব ডেটা অ্যাক্সেস করা হয়নি।",
+  "> Demo process চলছে...",
+  "> নকল সিগন্যাল বিশ্লেষণ হচ্ছে..."
+ ];
+ function render(){
+  const m=String(Math.floor(left/60)).padStart(2,'0'),s=String(left%60).padStart(2,'0');
+  $('timer').textContent=`${m}:${s}`;
+  const p=Math.round((total-left)/total*100); $('percent').textContent=p+'%'; $('bar').style.width=p+'%';
+  $('items').textContent=String(Math.min(9999,Math.floor((total-left)*37))).padStart(4,'0');
+  $('threat').textContent=String(Math.floor((total-left)/31));
+ }
+ function addLog(line){ const el=$('logs'); const arr=(el.textContent+'\n'+line).split('\n').slice(-7); el.textContent=arr.join('\n'); }
+ function finish(){clearInterval(timer);timer=null;running=false;$('status').textContent='COMPLETE';$('scanner').style.display='none';$('finish').style.display='block';}
+ function tick(){if(!running)return;left=Math.max(0,total-Math.floor((Date.now()-startAt)/1000));render();if(Math.floor(Math.random()*2)===0)addLog(lines[logCount++%lines.length]);if(left<=0)finish();}
+ function reset(){clearInterval(timer);timer=null;running=false;left=total;logCount=0;$('scanner').style.display='block';$('finish').style.display='none';$('status').textContent='READY';$('logs').textContent='> সিমুলেশন প্রস্তুত...\n> কোনো বাস্তব স্ক্যান করা হবে না।\n> START চাপলে ২ মিনিটের অ্যানিমেশন শুরু হবে।';$('start').disabled=false;$('start').textContent='▶ START SCAN';render();}
+ function start(){if(running)return;left=total;startAt=Date.now();running=true;$('status').textContent='RUNNING';$('start').disabled=true;$('start').textContent='SCAN RUNNING…';addLog('> 120-second prank simulation শুরু হয়েছে।');render();timer=setInterval(tick,250);tick();}
+ $('start').addEventListener('click',start);$('reset').addEventListener('click',reset);$('again').addEventListener('click',reset);render();
+})();
+</script>
+</body>
+</html>
